@@ -1,6 +1,11 @@
 import { genPhone } from 'src/customType/phone';
 import { genIdCard } from 'src/customType/idCard';
-import { it, expect } from 'vitest';
+import { it, expect, beforeAll } from 'vitest';
+import { init } from 'src';
+
+beforeAll(() => {
+    init();
+})
 
 it('genIdCard', () => {
     const res = genIdCard();

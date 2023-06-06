@@ -1,8 +1,13 @@
 
-import { ArrayOption, BooleanOption, DateTimeOption, NumberOption, ObjectOption, StringOption } from "./index";
-import { CustomOption } from "./type/custom";
+import { ArrayOption, BooleanOption, CustomOption, DateTimeOption, NumberOption, ObjectOption, StringOption } from "./index";
 
+// 生成器全部要满足传入一个参数，返回一个值
 export type GenData<T, R> = (options?: T) => R;
+
+export type IntegerRange = number | string | {
+    min: number;
+    max: number;
+}
 
 // 内置类型
 export enum BuiltInType {
@@ -12,7 +17,8 @@ export enum BuiltInType {
     dateTime = 'dateTime',
     number = 'number',
     object = 'object',
-    string = 'string'
+    string = 'string',
+    tree = 'tree',
 }
 
 // 时间数据类型

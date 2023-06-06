@@ -1,12 +1,11 @@
 import dayjs from "dayjs";
-import { registerGenerator } from "src/generator";
-import { BuiltInType, DateType, GenData } from "src/type";
+import { DateType } from "src/type";
 import { genNumber } from "./number";
 import { genString } from "./string";
 
 export type DateTimeOption = ({
     dataType?: DateType.number;
-    len?: 10 | 13;
+    accuracy?: 's' | 'ms';
 } | {
     dataType?: DateType.string;
     format?: string;
@@ -15,48 +14,61 @@ export type DateTimeOption = ({
     endTime?: number | string | Date;
 };
 
-type GenDateTime = GenData<DateTimeOption, string | number>;
+// 解析完统一转换成妙单位
+const parseTime = (time: number | string | Date): number => {
+    if (typeof time === 'number' && time.toString().length === 10) {
+        return dayjs.unix(time).valueOf();
+    }
+    return dayjs(time).valueOf();
+}
 
 const getMergeOption = (option?: DateTimeOption) => {
-    const dataType = option?.dataType ?? genString({
+    const dataType = option?.dataType || genString({
         charSet: [DateType.number, DateType.string],
         len: 1
     });
 
-    let res: DateTimeOption;
+    const res: DateTimeOption = {
+        startTime: option?.startTime,
+        endTime: option?.endTime
+    };
 
     if (dataType === DateType.number) {
-        res = {
+        Object.assign(res, {
             dataType: DateType.number,
             // @ts-ignore
-            len: option?.len ?? parseInt(genString({
-                charSet: ['10', '13'],
+            accuracy: option?.accuracy || genString({
+                charSet: ['s', 'ms'],
                 len: 1
-            }))
-        }
-    } else {
-        res = {
+            })
+        })
+    } else if (dataType === DateType.string) {
+        Object.assign(res, {
             dataType: DateType.string,
             // @ts-ignore
-            format: option?.format ?? 'YYYY-MM-DD hh:mm:ss'
-        }
+            format: option?.format ?? 'YYYY-MM-DD HH:mm:ss'
+        })
+    } else {
+        throw `数据类型 ${dataType} 必须为 'number' 或者 'string' `;
     }
 
-    if (typeof option?.startTime === 'number' && option.startTime.toString().length === 10) {
-        res.startTime = dayjs.unix(option.startTime).valueOf();
+    if (res.startTime && res.endTime) {
+        res.startTime = parseTime(res.startTime);
+        res.endTime = parseTime(res.endTime);
+    } else if (res.startTime) {
+        res.startTime = parseTime(res.startTime);
+        res.endTime = dayjs(res.startTime).add(100, 'day').valueOf();
+    } else if (res.endTime) {
+        res.endTime = parseTime(res.endTime);
+        res.startTime = dayjs(res.endTime).subtract(100, 'day').valueOf();
     } else {
-        res.startTime = option?.startTime ? dayjs(option.startTime).valueOf() : dayjs().subtract(100, 'day').valueOf();
-    }
-
-    if (typeof option?.endTime === 'number' && option.endTime.toString().length === 10) {
-        res.endTime = dayjs.unix(option.endTime).valueOf();
-    } else {
-        res.endTime = option?.endTime ? dayjs(option.endTime).valueOf() : dayjs().add(100, 'day').valueOf();
+        res.startTime = dayjs().subtract(100, 'day').valueOf();
+        res.endTime = dayjs().add(100, 'day').valueOf();
     }
 
     return res as ({
         dataType: DateType.number;
-        len: 10 | 13;
+        accuracy: 's' | 'ms';
     } | {
         dataType: DateType.string;
         format: string;
@@ -66,7 +78,7 @@ const getMergeOption = (option?: DateTimeOption) => {
     };
 }
 
-export const genDateTime: GenDateTime = (option) => {
+export const genDateTime = (option?: DateTimeOption) => {
     const mergeOption = getMergeOption(option);
     const res = dayjs(genNumber({
         min: mergeOption.startTime,
@@ -75,11 +87,7 @@ export const genDateTime: GenDateTime = (option) => {
     }));
 
     if (mergeOption.dataType === DateType.number) {
-        return mergeOption.len === 10 ? res.unix() : res.valueOf();
+        return mergeOption.accuracy === 's' ? res.unix() : res.valueOf();
     }
     return res.format(mergeOption.format);
 }
-
-registerGenerator({
-    [BuiltInType.dateTime]: genDateTime
-})

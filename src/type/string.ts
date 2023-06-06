@@ -1,26 +1,23 @@
-import { registerGenerator } from "src/generator";
-import { BuiltInType, GenData } from "src/type";
+import { BuiltInType, IntegerRange } from "src/type";
+import { parseIntegerRange } from "src/utils";
 import { genArray } from "./array";
-import { genNumber } from "./number";
 
 export interface StringOption {
     charSet?: string | string[]; // string[] 的场景是我要在 enable 和 disable 中生成一个，可以配置 { charSet: ['enable', 'disable'], len: 1 }
-    len?: number;
+    len?: IntegerRange;
 };
-
-type GenString = GenData<StringOption, string>;
 
 const getMergeOption = (option?: StringOption) => {
     const res: Required<StringOption> = {
         charSet: option?.charSet ?? '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-        len: option?.len ?? genNumber({ min: 1, max: 10, fixed: 0 })
+        len: parseIntegerRange(option?.len ?? '1-20')
     }
     return res;
 }
 
-export const genString: GenString = (option) => {
+export const genString = (option?: StringOption) => {
     const mergeOption = getMergeOption(option);
-    return genArray({
+    return genArray<number>({
         len: mergeOption.len,
         type: BuiltInType.number,
         typeOption: {
@@ -28,9 +25,5 @@ export const genString: GenString = (option) => {
             max: mergeOption.charSet.length - 1,
             fixed: 0
         }
-    }).map(item => mergeOption.charSet[item]).join('');
+    }).map(index => mergeOption.charSet[index]).join('');
 }
-
-registerGenerator({
-    [BuiltInType.string]: genString
-})

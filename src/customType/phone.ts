@@ -1,8 +1,6 @@
 
-import { genArray, registerGenerator } from "../index";
+import { genArray } from "../index";
 import { BuiltInType, GenData } from "../type";
-
-const key = 'phone';
 
 export interface PhoneOption {
 };
@@ -20,7 +18,3 @@ export const genPhone: GenPhone = () => {
         }
     }).join('')}`
 }
-
-registerGenerator({
-    [key]: genPhone
-});

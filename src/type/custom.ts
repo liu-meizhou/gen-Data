@@ -1,13 +1,11 @@
-import { getGenerator, registerGenerator } from "src/generator";
-import { BuiltInType, GenData } from "src/type";
+import { getGenerator } from "../index";
+import { GenData } from "src/type";
 import { genType } from "src/utils";
 
 export interface CustomOption {
     custom?: string | GenData<any, any>;
     [key: string]: any;
 };
-
-type GenCustom = GenData<CustomOption, any>;
 
 const getMergeOption = (option?: CustomOption) => {
     const res: Required<CustomOption> = {
@@ -16,15 +14,14 @@ const getMergeOption = (option?: CustomOption) => {
     return res;
 }
 
-export const genCustom: GenCustom = (option) => {
+export const genCustom = (option?: CustomOption) => {
     const mergeOption = getMergeOption(option);
     if (typeof mergeOption.custom === 'function') {
         return mergeOption.custom(mergeOption);
     }
     const generator = getGenerator(mergeOption.custom);
-    return generator ? generator(mergeOption) : `类型${mergeOption.custom}不存在`;
+    if (!generator) {
+        throw `类型：${mergeOption.custom} 未注册`;
+    }
+    return generator(option);
 }
-
-registerGenerator({
-    [BuiltInType.custom]: genCustom
-})

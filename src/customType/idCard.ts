@@ -1,9 +1,6 @@
 import { DateType, GenData } from "../type";
-import { genDateTime, genNumber, genString, registerGenerator } from "../index";
+import { genDateTime, genNumber, genString } from "../index";
 import CradData from './data.json';
-
-const key = 'idCard';
-
 export interface IdCardOption {
     code?: string;            // 6位长度的地区编码
     dateStart?: number | string | Date;
@@ -61,7 +58,3 @@ export const genIdCard: GenIdCard = (option) => {
     })
     return `${mergeOption.code}${mergeOption.date}${index}${mergeOption.sex}${endCode}`;
 }
-
-registerGenerator({
-    [key]: genIdCard
-});
