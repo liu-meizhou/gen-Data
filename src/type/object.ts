@@ -13,27 +13,28 @@ export type ObjectOption = {
 
 const getMergeOption = (option?: ObjectOption) => {
     const template =  option?.template || {};
-    const count = parseIntegerRange(option?.count ?? Object.keys(template).length);
-    return {
-        template,
-        count
-    }
-}
-
-export const genObject = (option?: ObjectOption) => {
+    const keys = Object.keys(template);
+    const len = keys.length;
+    const count = parseIntegerRange(option?.count ?? len);
+    let loseCount = len - count; // 丢失数量
     const res = {} as Record<string, any>;
-    const mergeOption = getMergeOption(option);
-    const len = Object.keys(mergeOption.template).length
-    // 丢失数量
-    let loseCount = len - mergeOption.count;
-    Object.keys(mergeOption.template).forEach((key, index) => {
+    keys.forEach((key, index) => {
         // 丢失数量等于剩余数量时，全部不生成数据;
         // 丢失数量大于0时候，用概率 loseCount/len 来确定是否丢失
         if (loseCount === (len - index) || (loseCount > 0 && genNumber({min: 0, max: len, fixed: 0}) < loseCount)) {
             loseCount--;
             return;
         }
-        const value = mergeOption.template[key];
+        res[key] = template[key];
+    })
+    return res;
+}
+
+export const genObject = (option?: ObjectOption) => {
+    const res = {} as Record<string, any>;
+    const mergeOption = getMergeOption(option);
+    Object.keys(mergeOption).forEach(key => {
+        const value = mergeOption[key];
         if (typeof value === 'string') {
             const generator = getGenerator(value);
             if (!generator) {

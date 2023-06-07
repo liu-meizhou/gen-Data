@@ -7,6 +7,7 @@ import { genDateTime } from './type/dateTime';
 import { genNumber } from './type/number';
 import { genObject } from './type/object';
 import { genString } from './type/string';
+import { genTree } from './type/tree';
 import { genType } from './utils';
 
 export function genData (option?: BuiltInOption) {
@@ -25,7 +26,8 @@ export function init () {
         [BuiltInType.number]: genNumber,
         [BuiltInType.object]: genObject,
         [BuiltInType.string]: genString,
-        [BuiltInType.custom]: genCustom
+        [BuiltInType.custom]: genCustom,
+        [BuiltInType.tree]: genTree
     });
 }
 
@@ -36,4 +38,5 @@ export * from "./type/object";
 export * from "./type/string";
 export * from "./type/custom";
 export * from "./type/dateTime";
+export * from "./type/tree";
 export * from "./generator";

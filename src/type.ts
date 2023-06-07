@@ -1,5 +1,5 @@
 
-import { ArrayOption, BooleanOption, CustomOption, DateTimeOption, NumberOption, ObjectOption, StringOption } from "./index";
+import { ArrayOption, BooleanOption, CustomOption, DateTimeOption, NumberOption, ObjectOption, StringOption, TreeOption } from "./index";
 
 // 生成器全部要满足传入一个参数，返回一个值
 export type GenData<T, R> = (options?: T) => R;
@@ -27,7 +27,7 @@ export enum DateType {
     string = 'string'
 }
 
-export type BuiltInOption = ArrayType | BooleanType | CustomType | DateTimeType | NumberType | ObjectType | StringType;
+export type BuiltInOption = ArrayType | BooleanType | CustomType | DateTimeType | NumberType | ObjectType | StringType | TreeType;
 
 export interface ArrayType {
     type?: BuiltInType.array,
@@ -62,5 +62,10 @@ export interface ObjectType {
 export interface StringType {
     type?: BuiltInType.string,
     typeOption?: StringOption
+}
+
+export interface TreeType {
+    type?: BuiltInType.tree,
+    typeOption?: TreeOption
 }
 
