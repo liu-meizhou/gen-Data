@@ -10,8 +10,6 @@ export type TreeOption = {
 
 const getMergeOption = (option?: TreeOption) => {
     return {
-        template: option?.template,
-        count: option?.count,
         childrenKey: option?.childrenKey || 'children',
         childrenLen: parseIntegerRange(option?.childrenLen ?? '2-4')
     };
@@ -26,7 +24,7 @@ export const genTree = (option?: TreeOption) => {
         return res;
     }
     for (let i = 0; i < mergeOption.childrenLen; i++) {
-        res[mergeOption.childrenKey].push(genTree(Object.assign(option || {}, {
+        res[mergeOption.childrenKey].push(genTree(Object.assign({}, option, {
             childrenLayer: childrenLayer - 1
         })));
     }

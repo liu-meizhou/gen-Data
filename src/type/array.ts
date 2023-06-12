@@ -1,12 +1,13 @@
-import { getGenerator } from "../index";
-import { BuiltInOption, IntegerRange } from "src/type";
-import { genBaseType, parseIntegerRange } from "src/utils";
+import { Mock } from "src/generator";
+import { IntegerRange } from "src/type";
+import { parseIntegerRange } from "src/utils";
 
-export type ArrayOption = {
+// 用useArray来写，可以输入类型
+export type ArrayOption<T> = {
     len?: IntegerRange;
-} & BuiltInOption;
+} & T;
 
-const getMergeOption = (option?: ArrayOption) => {
+const getMergeOption = <T>(option?: ArrayOption<T>) => {
     const res = {
         len: parseIntegerRange(option?.len ?? '0-10'),
         type: option?.type || genBaseType(),  // 默认只能基础类型，防止无限循环
@@ -19,15 +20,19 @@ const getMergeOption = (option?: ArrayOption) => {
     return res;
 }
 
-export const genArray = <R>(option?: ArrayOption): R[] => {
-    const mergeOption = getMergeOption(option);
-    const generator = getGenerator(mergeOption.type);
-    if (!generator) {
-        throw `类型：${mergeOption.type} 未注册`;
+export const useGenArray = <P>(mock: Mock) => {
+    type GenKey = ReturnType<mock.genType>;
+    const genArray = <T extends GenKey>(option?: P): R[] => {
+        const mergeOption = getMergeOption(option);
+        const generator = getGenerator(mergeOption.type);
+        if (!generator) {
+            throw `类型：${mergeOption.type} 未注册`;
+        }
+        const res = [];
+        for (let i = 0; i < mergeOption.len; i++) {
+            res.push(generator(mergeOption.typeOption))
+        }
+        return res;
     }
-    const res = [];
-    for (let i = 0; i < mergeOption.len; i++) {
-        res.push(generator(mergeOption.typeOption))
-    }
-    return res;
+    return genArray 
 }

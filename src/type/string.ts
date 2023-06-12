@@ -1,4 +1,4 @@
-import { BuiltInType, IntegerRange } from "src/type";
+import { IntegerRange } from "src/type";
 import { parseIntegerRange } from "src/utils";
 import { genArray } from "./array";
 

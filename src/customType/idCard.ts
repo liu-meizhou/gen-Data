@@ -1,5 +1,4 @@
-import { DateType, GenData } from "../type";
-import { genDateTime, genNumber, genString } from "../index";
+import { DateType } from "../type";
 import CradData from './data.json';
 export interface IdCardOption {
     code?: string;            // 6位长度的地区编码
@@ -8,10 +7,8 @@ export interface IdCardOption {
     sex?: '男' | '女';
 };
 
-type GenIdCard = GenData<IdCardOption, string>;
-
 const genCode = (data = CradData): string => {
-    const index = genNumber({ min: 0, max: data.length - 1, fixed: 0 });
+    const index = mock.number({ min: 0, max: data.length - 1, fixed: 0 });
     if (data[index].children.length) {
         return genCode(data[index].children);
     }
@@ -20,7 +17,7 @@ const genCode = (data = CradData): string => {
 
 const getMergeOption = (option?: IdCardOption) => {
     const code = option?.code ?? genCode();
-    const date = genDateTime({
+    const date = mock.dateTime({
         dataType: DateType.string,
         format: 'YYYYMMDD',
         startTime: option?.dateStart,
@@ -43,7 +40,7 @@ const getMergeOption = (option?: IdCardOption) => {
     };
 }
 
-export const genIdCard: GenIdCard = (option) => {
+export const genIdCard = (option?: IdCardOption) => {
     const mergeOption = getMergeOption(option);
     // 同地区同时间出生的编码
     let index: number | string = genNumber({

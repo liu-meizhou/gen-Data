@@ -1,13 +1,12 @@
 
 import { genArray } from "../index";
-import { BuiltInType, GenData } from "../type";
+import { BuiltInType } from "../type";
 
 export interface PhoneOption {
+    aaa: string;
 };
 
-type GenPhone = GenData<PhoneOption, string>;
-
-export const genPhone: GenPhone = () => {
+export const genPhone = (option?: PhoneOption) => {
     return `1${genArray({
         len: 10,
         type: BuiltInType.number,

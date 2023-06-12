@@ -1,17 +1,17 @@
-import { genData, getGenerator } from '../index';
-import { BuiltInOption, GenData, IntegerRange } from "src/type";
+import { GenData, IntegerRange } from "src/type";
 import { parseIntegerRange } from "src/utils";
 import { genNumber } from "./number";
 
-export type ObjectOption = {
+type BuiltInFuncObj = typeof builtInFuncObj;
+export type ObjectOption<T extends BuiltInFuncObj> = {
     template?: {
         // key为object的key, value为string时表示类型, BuiltInOption可以表示类型和类型的参数
-        [key: string]: string | GenData<any, any> | BuiltInOption
+        [key: string]: string | GenData<any, any> | T
     },
     count?: IntegerRange 
 };
 
-const getMergeOption = (option?: ObjectOption) => {
+const getMergeOption = <T extends BuiltInFuncObj>(option?: ObjectOption<T>) => {
     const template =  option?.template || {};
     const keys = Object.keys(template);
     const len = keys.length;
@@ -30,7 +30,7 @@ const getMergeOption = (option?: ObjectOption) => {
     return res;
 }
 
-export const genObject = (option?: ObjectOption) => {
+export const genObject = <T extends BuiltInFuncObj>(option?: ObjectOption<T>) => {
     const res = {} as Record<string, any>;
     const mergeOption = getMergeOption(option);
     Object.keys(mergeOption).forEach(key => {

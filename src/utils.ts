@@ -1,24 +1,11 @@
-import { getGenerators } from "./generator";
-import { BuiltInType, IntegerRange } from "./type";
+import { IntegerRange } from "./type";
 import { genNumber } from "./type/number";
-import { genString } from "./type/string"
-
-export const genBaseType = () => {
-    return genString({
-        charSet: [BuiltInType.boolean, BuiltInType.number, BuiltInType.string, BuiltInType.dateTime],
-        len: 1
-    }) as BuiltInType
-};
-
-export const genType = () => {
-    return genString({
-        charSet: getGenerators(),
-        len: 1
-    }) as BuiltInType
-};
 
 export const parseIntegerRange = (num: IntegerRange) => {
     if (typeof num === 'number') {
+        if (!Number.isInteger(num)) {
+            throw '传入的num必须是整数';
+        }
         return num;
     }
     let min = 0, max = 100;
