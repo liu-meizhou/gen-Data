@@ -10,8 +10,6 @@ export type TreeOption = {
 
 const getMergeOption = (option?: TreeOption) => {
     return {
-        template: option?.template,
-        count: option?.count,
         childrenKey: option?.childrenKey || 'children',
         childrenLen: parseIntegerRange(option?.childrenLen ?? '2-4')
     };
