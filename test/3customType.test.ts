@@ -1,21 +1,15 @@
-import { genPhone } from 'src/customType/phone';
-import { genIdCard } from 'src/customType/idCard';
-import { it, expect, beforeAll } from 'vitest';
-import { init } from 'src';
-
-beforeAll(() => {
-    init();
-})
+import { mock } from "src/main";
+import { it, expect } from 'vitest';
 
 it('genIdCard', () => {
-    const res = genIdCard();
+    const res = mock.idCard();
     expect(res.length).toBe(18);
-    expect(res === genIdCard()).toBe(false);
+    expect(res === mock.idCard()).toBe(false);
 });
 
 
 it('genPhone', () => {
-    const res = genPhone();
+    const res = mock.phone();
     expect(res.length).toBe(11);
-    expect(res === genPhone()).toBe(false);
+    expect(res === mock.phone()).toBe(false);
 });

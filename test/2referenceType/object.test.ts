@@ -1,13 +1,9 @@
-import { genObject, init } from "src";
+import { mock } from "src/main";
 import { BuiltInType } from "src/type";
-import { beforeAll, expect, it } from "vitest";
-
-beforeAll(() => {
-    init();
-})
+import { expect, it } from "vitest";
 
 it('genObject', () => {
-    const res = genObject({
+    const res = mock.object({
         template: {
             key1: 'number',
             key2: 'string',

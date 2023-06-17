@@ -1,14 +1,9 @@
-import { init } from "src";
+import { mock } from "src/main";
 import { BuiltInType } from "src/type";
-import { genTree } from "src/type/tree";
-import { beforeAll, expect, it } from "vitest";
-
-beforeAll(() => {
-    init();
-})
+import { expect, it } from "vitest";
 
 it('genTree', () => {
-    const res = genTree({
+    const res = mock.tree({
         template: {
             key1: 'number',
             key2: 'string',

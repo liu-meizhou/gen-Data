@@ -1,12 +1,9 @@
-import { genBoolean, init } from "src";
-import { beforeAll, expect, it } from "vitest";
+import { mock } from "src/main";
+import { expect, it } from "vitest";
 
-beforeAll(() => {
-    init();
-})
 
 it('genBoolean', () => {
-    const res = genBoolean();
+    const res = mock.boolean();
     expect(typeof res).toBe('boolean');
     expect([true, false].includes(res)).toBe(true);
 });

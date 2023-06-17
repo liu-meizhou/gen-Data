@@ -1,18 +1,14 @@
-import { genString, init } from "src";
-import { beforeAll, expect, it } from "vitest";
-
-beforeAll(() => {
-    init();
-})
+import { mock } from "src/main";
+import { expect, it } from "vitest";
 
 it('genString', () => {
-    const res = genString();
+    const res = mock.string();
     expect(typeof res).toBe('string');
-    expect(res === genString()).toBe(false);
+    expect(res === mock.string()).toBe(false);
 });
 
 it('字符串长度', () => {
     const len = 20;
-    const res = genString({len});
+    const res = mock.string({len});
     expect(res.length === len).toBe(true);
 });

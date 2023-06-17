@@ -3,14 +3,9 @@
 
 import { genIdCard } from './customType/idCard';
 import { genPhone } from './customType/phone';
-import { registerGenerator } from './generator';
+import { useGenerator } from './index';
 
-export enum CustomGenType {
-    phone = 'phone',
-    idCard = 'idCard',
-}
-
-registerGenerator({
-    [CustomGenType.phone]: genPhone,
-    [CustomGenType.idCard]: genIdCard
+export const mock = useGenerator({
+    phone: genPhone,
+    idCard: genIdCard
 });
