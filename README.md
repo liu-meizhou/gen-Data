@@ -67,10 +67,9 @@ mock.dateTime({
 })
 // xxxxx时间戳
 
-genData({
+mock.gen({
 	type: 'dateTime',
 	typeOption: {
-		dataType: 'string',
 		format: 'YYYY-MM-DD HH:mm:ss',
 		startTime: '2022-10-11',
 		endTime: '2023-09-01'
@@ -81,18 +80,15 @@ genData({
 
 ### object
 ``` js
-genData({
-	type: 'object',
-	typeOption: {
-		template: {
-			a: 'number',
-			b: 'string',
-			c: 'array',
-			d: {
-				type: 'number'，
-				typeOption: {
-					min: 100
-				}
+mock.object({
+	template: {
+		a: 'number',
+		b: 'string',
+		c: 'array',
+		d: {
+			type: 'number'，
+			typeOption: {
+				min: 100
 			}
 		}
 	}
@@ -106,24 +102,20 @@ genData({
 }
 */
 
-genData({
-	type: 'object',
-	typeOption: {
-		template: {
-			a: 'number',
-			b: 'string',
-			c: 'array',
-			d: {
-				type: 'number'，
-				typeOption: {
-					min: 100
-				}
+mock.object({
+	template: {
+		a: 'number',
+		b: 'string',
+		c: 'array',
+		d: {
+			type: 'number'，
+			typeOption: {
+				min: 100
 			}
-		},
-		len: 2 // 支持object {min: xx, max: xx}
-	}
+		}
+	},
+	count: 2 // 支持object {min: xx, max: xx}  'min-max'  表示从template生成key的数量
 })
-// 取abcd其中2个生成
 /*
 {
 	a: 5,
@@ -134,25 +126,22 @@ genData({
 
 ### tree
 ``` js
-genData({
-	type: 'tree',
-	typeOption: {
-		template: {
-			a: 'number',
-			b: 'string',
-			c: 'array',
-			d: {
-				type: 'number'，
-				typeOption: {
-					min: 100
-				}
+mock.tree({
+	template: {
+		a: 'number',
+		b: 'string',
+		c: 'array',
+		d: {
+			type: 'number'，
+			typeOption: {
+				min: 100
 			}
-		},
-		len: 2, // 支持object {min: xx, max: xx}
-		childrenKey: 'children',
-		childrenLen: 2, // 支持object {min: xx, max: xx}
-		layer: 2, // 支持object {min: xx, max: xx}
-	}
+		}
+	},
+	count: 2, // 支持object {min: xx, max: xx}  'min-max'  表示从template生成key的数量
+	childrenKey: 'children',
+	childrenLen: 2, // 支持object {min: xx, max: xx}  'min-max'  children的长度
+	childrenLayer: 2, // 支持object {min: xx, max: xx}  'min-max'  这颗树的层数
 })
 /*
 {
@@ -170,16 +159,13 @@ genData({
 
 ### array
 ``` js
-genData({
-	type: 'array',
+mock.array({
+	len: '2-4', // 支持object {min: xx, max: xx}  'min-max'  数组长度
+	type: 'string',
 	typeOption: {
-		len: 2, // 支持object {min: xx, max: xx}
-		type: 'string',
-		typeOption: {
-			len: {
-				min: 2,
-				max: 10
-			}
+		len: {
+			min: 2,
+			max: 10
 		}
 	}
 })
