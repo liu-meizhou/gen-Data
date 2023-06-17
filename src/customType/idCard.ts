@@ -1,4 +1,4 @@
-import { DateType, GenData } from "../type";
+import { GenData } from "../type";
 import { genDateTime, genNumber, genString } from "../index";
 import CradData from './data.json';
 export interface IdCardOption {
@@ -21,7 +21,6 @@ const genCode = (data = CradData): string => {
 const getMergeOption = (option?: IdCardOption) => {
     const code = option?.code ?? genCode();
     const date = genDateTime({
-        dataType: DateType.string,
         format: 'YYYYMMDD',
         startTime: option?.dateStart,
         endTime: option?.dateEnd

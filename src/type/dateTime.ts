@@ -1,15 +1,9 @@
 import dayjs from "dayjs";
-import { DateType } from "src/type";
 import { genNumber } from "./number";
-import { genString } from "./string";
 
-export type DateTimeOption = ({
-    dataType?: DateType.number;
+export type DateTimeOption = {
     accuracy?: 's' | 'ms';
-} | {
-    dataType?: DateType.string;
     format?: string;
-}) & {
     startTime?: number | string | Date;
     endTime?: number | string | Date;
 };
@@ -23,33 +17,15 @@ const parseTime = (time: number | string | Date): number => {
 }
 
 const getMergeOption = (option?: DateTimeOption) => {
-    const dataType = option?.dataType || genString({
-        charSet: [DateType.number, DateType.string],
-        len: 1
-    });
-
     const res: DateTimeOption = {
+        accuracy: option?.accuracy,
+        format: option?.format,
         startTime: option?.startTime,
         endTime: option?.endTime
     };
 
-    if (dataType === DateType.number) {
-        Object.assign(res, {
-            dataType: DateType.number,
-            // @ts-ignore
-            accuracy: option?.accuracy || genString({
-                charSet: ['s', 'ms'],
-                len: 1
-            })
-        })
-    } else if (dataType === DateType.string) {
-        Object.assign(res, {
-            dataType: DateType.string,
-            // @ts-ignore
-            format: option?.format ?? 'YYYY-MM-DD HH:mm:ss'
-        })
-    } else {
-        throw `数据类型 ${dataType} 必须为 'number' 或者 'string' `;
+    if (!res.accuracy) {
+        res.format = res.format ?? 'YYYY-MM-DD HH:mm:ss'
     }
 
     if (res.startTime && res.endTime) {
@@ -66,13 +42,9 @@ const getMergeOption = (option?: DateTimeOption) => {
         res.endTime = dayjs().add(100, 'day').valueOf();
     }
 
-    return res as ({
-        dataType: DateType.number;
+    return res as {
         accuracy: 's' | 'ms';
-    } | {
-        dataType: DateType.string;
         format: string;
-    }) & {
         startTime: number;
         endTime: number;
     };
@@ -86,7 +58,7 @@ export const genDateTime = (option?: DateTimeOption) => {
         fixed: 0
     }));
 
-    if (mergeOption.dataType === DateType.number) {
+    if (mergeOption.accuracy) {
         return mergeOption.accuracy === 's' ? res.unix() : res.valueOf();
     }
     return res.format(mergeOption.format);

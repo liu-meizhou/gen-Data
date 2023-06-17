@@ -21,12 +21,6 @@ export enum BuiltInType {
     tree = 'tree',
 }
 
-// 时间数据类型
-export enum DateType {
-    number = 'number',
-    string = 'string'
-}
-
 export type BuiltInOption = ArrayType | BooleanType | CustomType | DateTimeType | NumberType | ObjectType | StringType | TreeType;
 
 export interface ArrayType {

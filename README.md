@@ -1,24 +1,30 @@
+``` js
+import { mock } from "src/main";
+```
+
 ### boolean
 ``` js
-genData({
-	type: 'boolean'
-})
+mock.boolean()
 // true | false
 ```
 
 ### number
 ``` js
-genData({
-	type: 'number',
-	typeOption: {
-		min: 0,
-		max: 10,
-		fixed: 2
-	}
+mock.number({
+	min: 0,
+	max: 10,
+	fixed: 2
 })
-// 1.82 mock('number|0-10.2')
+// 1.82
 
-genData({
+mock.number({
+	min: 0,
+	max: 10,
+	fixed: '2-4'   // 小数点保留2-3位
+})
+// 1.823
+
+mock.gen({
 	type: 'number',
 	typeOption: {
 		min: 0,
@@ -29,21 +35,18 @@ genData({
 		}
 	}
 })
-// 1.82 mock('number|0-10.2-10')
+// 1.82
 ```
 
 ### string
 ``` js
-genData({
-	type: 'string',
-	typeOption: {
-		charSet: '*',
-		len: 3
-	}
+mock.string({
+	charSet: '*',
+	len: 3
 })
 // ***
 
-genData({
+mock.gen({
 	type: 'string',
 	typeOption: {
 		charSet: '0123456789',
@@ -58,15 +61,11 @@ genData({
 
 ### dateTime
 ``` js
-genData({
-	type: 'dateTime',
-	typeOption: {
-		dataType: 'number',
-		accuracy: 's',  // 'ms'
-		startTime: '2022-10-11'
-	}
+mock.dateTime({
+	accuracy: 's',  // 'ms'
+	startTime: '2022-10-11'
 })
-// xxxxx
+// xxxxx时间戳
 
 genData({
 	type: 'dateTime',

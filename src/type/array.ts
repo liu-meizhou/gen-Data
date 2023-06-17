@@ -10,7 +10,6 @@ const getMergeOption = (option?: ArrayOption) => {
     const res = {
         len: parseIntegerRange(option?.len ?? '0-10'),
         type: option?.type || genBaseType(),  // 默认只能基础类型，防止无限循环
-        // @ts-ignore
         typeOption: option?.typeOption
     }
     if (res.len < 0) {
